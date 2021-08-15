@@ -19,8 +19,8 @@ function install_dep() {
     sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 }
 
-# green "Installing pre-requisites"
-# install_dep
+green "Installing pre-requisites"
+install_dep
 
 green "Deploying Cluster => spark-cluster"
 eksctl create cluster -f spark-cluster.yaml
@@ -43,7 +43,7 @@ helm upgrade \
     --version 1.1.6 \
     --wait
 
-while [[ $(kubectl get pods -l app=hello -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do 
+while [[ $(kubectl -n spark get pods -l app.kubernetes.io/name=spark-operator -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do 
     echo "waiting for opertor pod to be ready" && sleep 1; 
 done
 
