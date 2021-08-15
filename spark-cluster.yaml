@@ -1,0 +1,18 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: spark-cluster
+  region: us-east-1
+  version: "1.21"
+
+availabilityZones: 
+  - us-east-1a
+  - us-east-1b
+  - us-east-1c
+fargateProfiles:
+  - name: fp-all
+    selectors:
+      - namespace: kube-system
+      - namespace: default
+      - namespace: spark
